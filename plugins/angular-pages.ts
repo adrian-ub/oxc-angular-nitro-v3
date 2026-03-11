@@ -20,7 +20,7 @@ const GLOB_SCAN_PATTERN = '**/*.ts';
  */
 function fileToRoute(filePath: string): string {
   let route = filePath
-    .replace(/\.ts$/, '')                                 // strip extension
+    .replace(/\.ts$/, '')                            // strip extension
     .replace(/\(([^)]+)\)[/\\]/g, '')                     // remove (group)/ segments
     .replace(/\[\.\.\.([^\]]*)\]/g, '**')                 // [...slug] → **
     .replace(/\[([^\]]+)\]/g, ':$1');                     // [id] → :id
@@ -41,7 +41,14 @@ async function scanPages(pagesDir: string): Promise<{ filePath: string; route: s
   });
 
   return files
-    .sort((a, b) => a.localeCompare(b))
+    .sort((a, b) => {
+      // Push catch-all routes ([...param]) to the end
+      const aIsCatchAll = a.includes('[...');
+      const bIsCatchAll = b.includes('[...');
+      if (aIsCatchAll && !bIsCatchAll) return 1;
+      if (!aIsCatchAll && bIsCatchAll) return -1;
+      return a.localeCompare(b);
+    })
     .map((file) => {
       const catchAllMatch = file.match(/\[\.\.\.([^\]]*)\]/);
       return {

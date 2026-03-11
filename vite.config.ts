@@ -6,12 +6,18 @@ import { defineConfig } from 'vite'
 import { angular } from '@oxc-angular/vite'
 import { nitro } from "nitro/vite"
 import { angularPages } from './plugins/angular-pages'
+import { angularContent } from './plugins/angular-content'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const tsconfig = path.resolve(__dirname, './tsconfig.app.json')
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      '#plugins': path.resolve(__dirname, 'plugins'),
+    },
+  },
   plugins: [
     nitro({
       preset: "static",
@@ -21,6 +27,11 @@ export default defineConfig({
       },
     }),
     angularPages(),
+    angularContent({
+      components: {
+        'app-greeting': { path: '/app/components/example', name: 'GreetingComponent', inputs: ['exampleInput'] },
+      },
+    }),
     angular({
       tsconfig,
     }),

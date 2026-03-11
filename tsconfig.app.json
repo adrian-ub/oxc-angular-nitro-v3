@@ -9,7 +9,8 @@
     ]
   },
   "include": [
-    "app/**/*.ts"
+    "app/**/*.ts",
+    "plugins/content-renderer.ts"
   ],
   "exclude": [
     "app/**/*.spec.ts"

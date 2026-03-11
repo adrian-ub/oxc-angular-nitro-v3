@@ -17,12 +17,21 @@
     "@angular/platform-server": "^21.2.0",
     "@angular/router": "^21.2.0",
     "@angular/ssr": "^21.2.0",
+    "@shikijs/rehype": "^4.0.2",
     "express": "^5.1.0",
     "nitro": "latest",
+    "rehype-raw": "^7.0.0",
+    "rehype-stringify": "^10.0.1",
+    "remark-frontmatter": "^5.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
     "rxjs": "~7.8.0",
     "tinyglobby": "^0.2.15",
     "tslib": "^2.3.0",
-    "unhead": "^2.1.12"
+    "unhead": "^2.1.12",
+    "unified": "^11.0.5",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@angular/build": "^21.2.0",
