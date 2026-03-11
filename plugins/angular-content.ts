@@ -6,6 +6,8 @@ import type { Plugin } from 'vite';
 export interface AngularContentOptions {
   /** Directory containing content files (default: 'content') */
   contentDir?: string;
+  /** Directory to auto-discover MDC components (default: 'app/components') */
+  componentsDir?: string;
   /** Shiki theme (default: 'github-dark') */
   theme?: string;
   /** Extra remark plugins */
@@ -13,9 +15,8 @@ export interface AngularContentOptions {
   /** Extra rehype plugins */
   rehypePlugins?: any[];
   /**
-   * Map of MDC component tags to their import paths.
+   * Additional MDC component tags (merged with auto-discovered ones).
    * Keys are element selectors used in markdown, values are { path, name }.
-   * Example: { 'app-greeting': { path: '@/components/example', name: 'GreetingComponent' } }
    */
   components?: Record<string, { path: string; name: string }>;
 }
@@ -245,6 +246,35 @@ async function bindMdcAttributes(
   return html;
 }
 
+/**
+ * Auto-discover Angular components from a directory.
+ * Parses each .ts file to extract the selector and class name.
+ */
+async function scanComponents(
+  componentsDir: string,
+  root: string
+): Promise<Record<string, { path: string; name: string }>> {
+  const result: Record<string, { path: string; name: string }> = {};
+  const files = await glob('**/*.ts', { cwd: componentsDir });
+
+  for (const file of files) {
+    const absPath = resolvePath(componentsDir, file);
+    const source = await readFile(absPath, 'utf-8');
+
+    const selectorMatch = source.match(/@Component\(\{[^}]*selector:\s*['"]([^'"]+)['"]/s);
+    const classMatch = source.match(/export\s+class\s+(\w+)/);
+    if (!selectorMatch || !classMatch) continue;
+
+    const selector = selectorMatch[1];
+    const name = classMatch[1];
+    const importPath = '/' + relative(root, absPath).replace(/\.ts$/, '');
+
+    result[selector] = { path: importPath, name };
+  }
+
+  return result;
+}
+
 /** Scan content directory for .md files */
 async function scanContent(contentDir: string) {
   const files = await glob('**/*.md', { cwd: contentDir });
@@ -261,11 +291,12 @@ export function angularContent(options?: AngularContentOptions): Plugin {
   let processor: Awaited<ReturnType<typeof createProcessor>> | null = null;
   let root: string;
   let contentDir: string;
+  let componentsDirPath: string;
   let entries: { filePath: string; path: string }[] = [];
   const theme = options?.theme ?? 'github-dark';
   const remarkPlugins = options?.remarkPlugins ?? [];
   const rehypePlugins = options?.rehypePlugins ?? [];
-  const components = options?.components ?? {};
+  let components: Record<string, { path: string; name: string }> = {};
 
   return {
     name: 'angular-content',
@@ -274,7 +305,10 @@ export function angularContent(options?: AngularContentOptions): Plugin {
     async configResolved(config) {
       root = config.root;
       contentDir = options?.contentDir ?? resolvePath(root, 'content');
+      componentsDirPath = resolvePath(root, options?.componentsDir ?? 'app/components');
       entries = await scanContent(contentDir);
+      const discovered = await scanComponents(componentsDirPath, root);
+      components = { ...discovered, ...options?.components };
     },
 
     async buildStart() {
@@ -453,8 +487,9 @@ export function injectContent() {
 
     configureServer(server) {
       server.watcher.add(contentDir);
+      server.watcher.add(componentsDirPath);
 
-      const reload = async (path: string) => {
+      const reloadContent = async (path: string) => {
         const rel = relative(contentDir, path);
         if (rel.startsWith('..') || !rel.endsWith('.md')) return;
 
@@ -474,9 +509,29 @@ export function injectContent() {
         server.ws.send({ type: 'full-reload' });
       };
 
-      server.watcher.on('add', reload);
-      server.watcher.on('change', reload);
-      server.watcher.on('unlink', reload);
+      const reloadComponents = async (path: string) => {
+        const rel = relative(componentsDirPath, path);
+        if (rel.startsWith('..') || !rel.endsWith('.ts')) return;
+
+        const discovered = await scanComponents(componentsDirPath, root);
+        components = { ...discovered, ...options?.components };
+        inputMapCache.clear();
+
+        // Invalidate all content page modules so they pick up new components
+        for (const entry of entries) {
+          const pageId = RESOLVED_PAGE_PREFIX + entry.path + '.ts';
+          const pageMod = server.moduleGraph.getModuleById(pageId);
+          if (pageMod) server.moduleGraph.invalidateModule(pageMod);
+        }
+        const mod = server.moduleGraph.getModuleById(RESOLVED_VIRTUAL_ID);
+        if (mod) server.moduleGraph.invalidateModule(mod);
+
+        server.ws.send({ type: 'full-reload' });
+      };
+
+      server.watcher.on('add', (p) => { reloadContent(p); reloadComponents(p); });
+      server.watcher.on('change', (p) => { reloadContent(p); reloadComponents(p); });
+      server.watcher.on('unlink', (p) => { reloadContent(p); reloadComponents(p); });
     },
   };
 }
