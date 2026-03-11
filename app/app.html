@@ -1,4 +1,14 @@
 <div>
+  <div class="nav">
+    <a routerLink="/">Index</a>
+    <a routerLink="about">About</a>
+    <a routerLink="sub">Sub</a>
+    <a routerLink="sub/example">Sub/[slug]</a>
+    <a routerLink="settings">(group)/settings</a>
+    <a routerLink="other/foo">Other/[...slug]</a>
+    <a routerLink="other/foo/bar">Other/[...slug]</a>
+    <a routerLink="test-empty">test-empty</a>
+  </div>
   <h1>Nitro + Angular</h1>
   <div id="app" class="card">
     <button (click)="callApi()">{{labelText()}}</button>

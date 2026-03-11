@@ -41,6 +41,9 @@ importers:
       rxjs:
         specifier: ~7.8.0
         version: 7.8.2
+      tinyglobby:
+        specifier: ^0.2.15
+        version: 0.2.15
       tslib:
         specifier: ^2.3.0
         version: 2.8.1

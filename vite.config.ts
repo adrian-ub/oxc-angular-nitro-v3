@@ -5,6 +5,7 @@ import { fileURLToPath } from 'node:url'
 import { defineConfig } from 'vite'
 import { angular } from '@oxc-angular/vite'
 import { nitro } from "nitro/vite"
+import { angularPages } from './plugins/angular-pages'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -19,6 +20,7 @@ export default defineConfig({
         routes: ['/']
       },
     }),
+    angularPages(),
     angular({
       tsconfig,
     }),
