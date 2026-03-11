@@ -34,7 +34,7 @@ function fileToRoute(filePath: string): string {
   return route;
 }
 
-async function scanPages(pagesDir: string): Promise<{ filePath: string; route: string }[]> {
+async function scanPages(pagesDir: string): Promise<{ filePath: string; route: string; catchAllParam?: string }[]> {
   const files = await glob(GLOB_SCAN_PATTERN, {
     cwd: pagesDir,
     ignore: ['**/*.spec.ts', '**/*.test.ts'],
@@ -42,31 +42,36 @@ async function scanPages(pagesDir: string): Promise<{ filePath: string; route: s
 
   return files
     .sort((a, b) => a.localeCompare(b))
-    .map((file) => ({
-      filePath: resolve(pagesDir, file),
-      route: fileToRoute(file),
-    }));
+    .map((file) => {
+      const catchAllMatch = file.match(/\[\.\.\.([^\]]*)\]/);
+      return {
+        filePath: resolve(pagesDir, file),
+        route: fileToRoute(file),
+        catchAllParam: catchAllMatch?.[1],
+      };
+    });
 }
 
-function generateRoutesCode(pages: { filePath: string; route: string }[], root: string): string {
+function generateRoutesCode(pages: { filePath: string; route: string; catchAllParam?: string }[], root: string): string {
   const routeEntries: string[] = [];
 
-  for (const { filePath, route } of pages) {
+  for (const { filePath, route, catchAllParam } of pages) {
     const importPath = '/' + relative(root, filePath).split('\\').join('/');
     const loadComponent = `() => import('${importPath}').then(m => resolveComponent(m, '${importPath}'))`;
 
-    // Catch-all routes: 'other/**' → { path: 'other', children: [{ path: '**', loadComponent }] }
+    // Catch-all routes: 'other/**' → { path: 'other', children: [{ path: '**', loadComponent, data }] }
     // This ensures ActivatedRoute.snapshot.url only contains the wildcard segments
     if (route.includes('**')) {
       const idx = route.indexOf('**');
       const parent = route.slice(0, idx).replace(/\/$/, '');
+      const dataStr = catchAllParam ? `, data: { _catchAllParam: '${catchAllParam}' }` : '';
       if (parent) {
         routeEntries.push(
-          `  { path: '${parent}', children: [{ path: '**', loadComponent: ${loadComponent} }] }`
+          `  { path: '${parent}', children: [{ path: '**', loadComponent: ${loadComponent}${dataStr} }] }`
         );
       } else {
         routeEntries.push(
-          `  { path: '**', loadComponent: ${loadComponent} }`
+          `  { path: '**', loadComponent: ${loadComponent}${dataStr} }`
         );
       }
     } else {

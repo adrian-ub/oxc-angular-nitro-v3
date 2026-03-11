@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
-import { routeParam } from '../../utils/route-param';
+import { useRoute } from '../../utils/use-route';
 
 @Component({
-  template: `Sub Slug: {{ slug() }}`
+  template: `Sub Slug: {{ route.params()['slug'] }}`
 })
 export default class SubSlugPage {
-  protected slug = routeParam('slug');
+  protected route = useRoute();
 }
