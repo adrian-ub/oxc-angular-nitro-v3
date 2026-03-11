@@ -17,7 +17,7 @@ export interface AngularContentOptions {
    * Keys are element selectors used in markdown, values are { path, name }.
    * Example: { 'app-greeting': { path: '@/components/example', name: 'GreetingComponent' } }
    */
-  components?: Record<string, { path: string; name: string; inputs?: string[] }>;
+  components?: Record<string, { path: string; name: string }>;
 }
 
 const VIRTUAL_ID = 'virtual:ng-content';
@@ -163,26 +163,65 @@ function unwrapMdcComponents(
 }
 
 /**
+ * Extract input property names from a component source file by static analysis.
+ * Detects: `name = input()`, `name = input<T>()`, `name = input.required<T>()`,
+ * `@Input() name`, `@Input('alias') name`.
+ * Results are cached per tag.
+ */
+const inputMapCache = new Map<string, Map<string, string>>();
+
+async function getInputMap(
+  tag: string,
+  component: { path: string; name: string },
+  root: string
+): Promise<Map<string, string>> {
+  if (inputMapCache.has(tag)) return inputMapCache.get(tag)!;
+
+  const inputMap = new Map<string, string>();
+
+  try {
+    const absPath = component.path.startsWith('/')
+      ? resolvePath(root, component.path.slice(1))
+      : component.path;
+    const filePath = absPath.endsWith('.ts') ? absPath : absPath + '.ts';
+    const source = await readFile(filePath, 'utf-8');
+
+    // Signal inputs: name = input(), input<T>(), input.required<T>()
+    const signalRe = /(\w+)\s*=\s*input(?:\s*\.\s*required)?(?:\s*<[^>]*>)?\s*\(/g;
+    let m;
+    while ((m = signalRe.exec(source))) {
+      inputMap.set(m[1].toLowerCase(), m[1]);
+    }
+
+    // Decorator inputs: @Input() name or @Input('alias') name
+    const decoratorRe = /@Input\([^)]*\)\s+(\w+)/g;
+    while ((m = decoratorRe.exec(source))) {
+      inputMap.set(m[1].toLowerCase(), m[1]);
+    }
+  } catch { /* file not found or unreadable — skip */ }
+
+  inputMapCache.set(tag, inputMap);
+  return inputMap;
+}
+
+/**
  * Convert plain HTML attributes on MDC components to Angular property bindings.
  * Rehype lowercases all HTML attributes, so `exampleInput` becomes `exampleinput`.
- * This function converts them to Angular `[camelCase]="'value'"` bindings.
+ * Uses reflectComponentType to recover original casing.
  *
  * Supports two conventions in markdown:
  *  - camelCase (lowercased by rehype): `exampleInput` → `exampleinput` → `[exampleInput]`
  *  - kebab-case: `example-input` → `[exampleInput]`
  */
-function bindMdcAttributes(
+async function bindMdcAttributes(
   html: string,
-  registeredComponents: Record<string, { path: string; name: string; inputs?: string[] }>
-): string {
+  registeredComponents: Record<string, { path: string; name: string }>,
+  root: string
+): Promise<string> {
   const SKIP_ATTRS = new Set(['class', 'style', 'id', 'hidden', 'title', 'slot', 'ngh', 'ng-version', 'ng-server-context']);
 
   for (const tag of Object.keys(registeredComponents)) {
-    // Build lowercase → originalCase map from declared inputs
-    const inputMap = new Map<string, string>();
-    for (const name of registeredComponents[tag].inputs ?? []) {
-      inputMap.set(name.toLowerCase(), name);
-    }
+    const inputMap = await getInputMap(tag, registeredComponents[tag], root);
 
     const tagRegex = new RegExp(`<${tag}(\\s[^>]*)?>`, 'gi');
     html = html.replace(tagRegex, (fullMatch, attrsStr) => {
@@ -290,7 +329,7 @@ export function angularContent(options?: AngularContentOptions): Plugin {
         html = unwrapMdcComponents(html, components);
 
         // Convert plain attributes on MDC components to Angular property bindings
-        html = bindMdcAttributes(html, components);
+        html = await bindMdcAttributes(html, components, root);
 
         // Extract code blocks before escaping (they'll become component properties)
         const codeBlocks = extractCodeBlocks(html);
@@ -420,6 +459,7 @@ export function injectContent() {
         if (rel.startsWith('..') || !rel.endsWith('.md')) return;
 
         entries = await scanContent(contentDir);
+        inputMapCache.clear();
 
         // Invalidate main index module
         const mod = server.moduleGraph.getModuleById(RESOLVED_VIRTUAL_ID);

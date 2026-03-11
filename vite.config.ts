@@ -29,7 +29,8 @@ export default defineConfig({
     angularPages(),
     angularContent({
       components: {
-        'app-greeting': { path: '/app/components/example', name: 'GreetingComponent', inputs: ['exampleInput'] },
+        'app-greeting': { path: '/app/components/example', name: 'GreetingComponent' },
+        // Input names are auto-discovered from the component source file
       },
     }),
     angular({
