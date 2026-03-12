@@ -32,11 +32,21 @@ export interface NaxtOptions {
 
 // ─── Code generation ──────────────────────────────────────────────────
 
-function generateEntryClient(appComponent: string): string {
+function resolveCssPaths(css: string[]): string[] {
+  return css.map(f => f.replace(/^~\//, ''));
+}
+
+function generateCssImports(css: string[]): string {
+  return resolveCssPaths(css).map(f => `import '/${f}';`).join('\n');
+}
+
+function generateEntryClient(appComponent: string, css: string[]): string {
+  const cssImports = generateCssImports(css);
   return [
     "import { bootstrapApplication } from '@angular/platform-browser';",
     "import { appConfig } from 'virtual:naxt/app-config';",
     `import { App } from '/${appComponent}';`,
+    cssImports,
     '',
     'bootstrapApplication(App, appConfig)',
     '  .catch((err) => console.error(err));',
@@ -45,7 +55,7 @@ function generateEntryClient(appComponent: string): string {
 }
 
 function generateEntryServer(appComponent: string, title: string, css: string[]): string {
-  const cssImports = css.map(f => `import '/${f}';`).join('\n');
+  const cssImports = generateCssImports(css);
 
   const htmlTemplateFn = [
     'function htmlTemplate(): string {',
@@ -165,12 +175,13 @@ export function naxt(options?: NaxtOptions): Plugin[] {
 
       // Generate entry files
       mkdirSync(naxtDir, { recursive: true });
-      writeFileSync(join(naxtDir, 'entry-client.ts'), generateEntryClient(appComponent));
+      writeFileSync(join(naxtDir, 'entry-client.ts'), generateEntryClient(appComponent, css));
       writeFileSync(join(naxtDir, 'entry-server.ts'), generateEntryServer(appComponent, title, css));
 
       return {
         resolve: {
           alias: {
+            '~': root,
             '#plugins': resolve(root, 'plugins'),
           },
         },

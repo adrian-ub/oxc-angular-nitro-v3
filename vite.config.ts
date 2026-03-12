@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [
     naxt({
       title: 'Nitro + Angular',
+      css: ['./app/styles.css'],
       modules: [
         angularContent(),
       ],
