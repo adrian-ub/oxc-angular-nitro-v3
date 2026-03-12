@@ -2,6 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { dirname, relative, resolve as resolvePath } from 'pathe';
 import { glob } from 'tinyglobby';
 import type { Plugin } from 'vite';
+import type { AngularPagesModule } from './angular-pages';
 
 export interface AngularContentOptions {
   /** Directory containing content files (default: 'content') */
@@ -287,20 +288,21 @@ async function scanContent(contentDir: string) {
   });
 }
 
-export function angularContent(options?: AngularContentOptions): Plugin {
-  let processor: Awaited<ReturnType<typeof createProcessor>> | null = null;
-  let root: string;
-  let contentDir: string;
-  let componentsDirPath: string;
-  let entries: { filePath: string; path: string }[] = [];
-  const theme = options?.theme ?? 'github-dark';
-  const remarkPlugins = options?.remarkPlugins ?? [];
-  const rehypePlugins = options?.rehypePlugins ?? [];
-  let components: Record<string, { path: string; name: string }> = {};
+export function angularContent(options?: AngularContentOptions): AngularPagesModule {
+  return (_ctx) => {
+    let processor: Awaited<ReturnType<typeof createProcessor>> | null = null;
+    let root: string;
+    let contentDir: string;
+    let componentsDirPath: string;
+    let entries: { filePath: string; path: string }[] = [];
+    const theme = options?.theme ?? 'github-dark';
+    const remarkPlugins = options?.remarkPlugins ?? [];
+    const rehypePlugins = options?.rehypePlugins ?? [];
+    let components: Record<string, { path: string; name: string }> = {};
 
-  return {
-    name: 'angular-content',
-    enforce: 'pre',
+    return {
+      name: 'angular-content',
+      enforce: 'pre',
 
     async configResolved(config) {
       root = config.root;
@@ -533,5 +535,6 @@ export function injectContent() {
       server.watcher.on('change', (p) => { reloadContent(p); reloadComponents(p); });
       server.watcher.on('unlink', (p) => { reloadContent(p); reloadComponents(p); });
     },
+    } satisfies Plugin;
   };
 }

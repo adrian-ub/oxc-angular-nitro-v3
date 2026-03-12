@@ -26,8 +26,11 @@ export default defineConfig({
         routes: ['/']
       },
     }),
-    angularPages(),
-    angularContent(),
+    angularPages({
+      modules: [
+        angularContent(),
+      ],
+    }),
     angular({
       tsconfig,
     }),
