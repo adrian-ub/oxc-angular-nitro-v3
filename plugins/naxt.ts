@@ -22,8 +22,6 @@ export interface NaxtAppOptions {
 export interface NaxtOptions {
   /** App configuration (head, etc.) — same as Nuxt's `app`. */
   app?: NaxtAppOptions;
-  /** Root component path (without extension). Default: 'app/app' */
-  rootComponent?: string;
   /** Global CSS files. Supports `~/` prefix for root-relative paths. */
   css?: string[];
   /** Naxt modules (like Nuxt modules) */
@@ -311,10 +309,10 @@ function generateRootTsConfig(naxtDir: string, root: string): string {
 // ─── Plugin ───────────────────────────────────────────────────────────
 
 export function naxt(options?: NaxtOptions): Plugin[] {
-  const appComponent = options?.rootComponent ?? 'app/app';
+  const srcDir = options?.srcDir ?? 'app';
+  const appComponent = `${srcDir}/app`;
   const head = mergeHead(DEFAULT_HEAD, options?.app?.head);
   const css = options?.css ?? ['~/styles.css'];
-  const srcDir = options?.srcDir ?? 'app';
 
   const naxtPlugin: Plugin = {
     name: 'naxt',
