@@ -1,4 +1,4 @@
-import { resolve, relative } from 'node:path';
+import { resolve, relative } from 'pathe';
 import { glob } from 'tinyglobby';
 import type { Plugin } from 'vite';
 
@@ -26,7 +26,7 @@ function fileToRoute(filePath: string): string {
     .replace(/\[([^\]]+)\]/g, ':$1');                     // [id] → :id
 
   // Normalize to posix separators
-  route = route.split('\\').join('/');
+  route = route.replace(/\\/g, '/');
 
   // Remove trailing /index or standalone index
   route = route.replace(/\/index$/, '').replace(/^index$/, '');
@@ -63,7 +63,7 @@ function generateRoutesCode(pages: { filePath: string; route: string; catchAllPa
   const routeEntries: string[] = [];
 
   for (const { filePath, route, catchAllParam } of pages) {
-    const importPath = '/' + relative(root, filePath).split('\\').join('/');
+    const importPath = '/' + relative(root, filePath);
     const loadComponent = `() => import('${importPath}').then(m => resolveComponent(m, '${importPath}'))`;
 
     // Catch-all routes: 'other/**' → { path: 'other', children: [{ path: '**', loadComponent, data }] }

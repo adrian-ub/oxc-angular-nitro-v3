@@ -31,10 +31,5 @@ export default defineConfig({
     angular({
       tsconfig,
     }),
-  ],
-  environments: {
-    client: {
-      build: { rollupOptions: { input: "./entry-client.ts" } },
-    },
-  },
+  ]
 });

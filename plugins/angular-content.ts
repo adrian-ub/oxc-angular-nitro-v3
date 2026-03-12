@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { dirname, relative, resolve as resolvePath } from 'node:path';
+import { dirname, relative, resolve as resolvePath } from 'pathe';
 import { glob } from 'tinyglobby';
 import type { Plugin } from 'vite';
 

@@ -1,5 +1,5 @@
 import { readFile } from 'node:fs/promises';
-import { basename, dirname, relative, resolve as resolvePath } from 'node:path';
+import { basename, dirname, relative, resolve as resolvePath } from 'pathe';
 import { glob } from 'tinyglobby';
 import type { Plugin } from 'vite';
 
@@ -217,7 +217,7 @@ async function scanMdPages(pagesDir: string) {
 
 function generateRoutesCode(pages: { filePath: string; route: string }[], root: string): string {
   const entries = pages.map(({ filePath, route }) => {
-    const importPath = '/' + relative(root, filePath).split('\\').join('/');
+    const importPath = '/' + relative(root, filePath);
     return `  { path: '${route}', loadComponent: () => import('${importPath}') }`;
   });
 
