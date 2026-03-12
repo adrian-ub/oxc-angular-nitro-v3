@@ -3,6 +3,16 @@ declare module 'virtual:angular-pages' {
   export const routes: Routes;
 }
 
+declare module 'virtual:naxt/app-config' {
+  import type { ApplicationConfig } from '@angular/core';
+  export const appConfig: ApplicationConfig;
+}
+
+declare module 'virtual:naxt/app-config-server' {
+  import type { ApplicationConfig } from '@angular/core';
+  export const config: ApplicationConfig;
+}
+
 declare module 'virtual:ng-content' {
   import type { Signal } from '@angular/core';
 
