@@ -101,7 +101,7 @@ function generateEntryServer(appComponent: string, head: Head, css: string[]): s
 ${cssImports}
 import { renderApplication } from '@angular/platform-server';
 import { reflectComponentType } from '@angular/core';
-import { BootstrapContext, bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { createHead, transformHtmlTemplate } from 'unhead/server';
 
 import { App } from '/${appComponent}';
