@@ -94,8 +94,8 @@ importers:
         specifier: ^21.2.0
         version: 21.2.0(@angular/compiler@21.2.0)(typescript@5.9.3)
       '@oxc-angular/vite':
-        specifier: ^0.0.15
-        version: 0.0.15(vite@8.0.0-beta.18(@types/node@20.19.35)(esbuild@0.27.3)(jiti@2.6.1)(sass@1.97.3)(yaml@2.8.2))
+        specifier: ^0.0.17
+        version: 0.0.17(vite@8.0.0-beta.18(@types/node@20.19.35)(esbuild@0.27.3)(jiti@2.6.1)(sass@1.97.3)(yaml@2.8.2))
       '@types/express':
         specifier: ^5.0.1
         version: 5.0.6
@@ -1030,48 +1030,48 @@ packages:
     resolution: {integrity: sha512-mGUWr1uMnf0le2TwfOZY4SFxZGXGfm4Jtay/nwAa2FLNAKXUoUwaGwBMNH36UHPtinWfTSJ3nqFQr0091CxVGg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  '@oxc-angular/binding-darwin-arm64@0.0.15':
-    resolution: {integrity: sha512-A5XAeU4A3BCRdo5jrMNlXCA/ivq6jtBeoQ/8EcjWj+YumEZt36mAa27XhKHCq2/V645YTMHdyDDOLNJqJ5k+4Q==}
+  '@oxc-angular/binding-darwin-arm64@0.0.17':
+    resolution: {integrity: sha512-M1An3MVGEkH6ko0ivE35zLMyum49aD6sGUSh/3Anzxa32wTQAczznS9owx3hGCOpoOVgMp+nwZwBBi9kY4Gdkw==}
     cpu: [arm64]
     os: [darwin]
 
-  '@oxc-angular/binding-darwin-x64@0.0.15':
-    resolution: {integrity: sha512-kxQVWhnL0dr6ozAKCroI/ZmX0mQFM6PqFUMZ6nCNGdESs49PcCOMBHGNkLIre96cJFfz5RVB16zCbBe9sC12Aw==}
+  '@oxc-angular/binding-darwin-x64@0.0.17':
+    resolution: {integrity: sha512-vTFvjUXn8cYjFQaMGYaoWDrYUFEvIf2PvaKjuo1t0c8IX4R7Sn1ogNRtXQkkBKR4E6eXCXg2zAO5ROzPRtmwGA==}
     cpu: [x64]
     os: [darwin]
 
-  '@oxc-angular/binding-linux-arm64-gnu@0.0.15':
-    resolution: {integrity: sha512-/xoe8QhbH6kKbDajUPRUx0x3/ukgkvYuIckZAZQA3scqr8WChP9w0Qo2vtCMeQ7i71PgUZ7ed+B1qrx+GRmcrw==}
+  '@oxc-angular/binding-linux-arm64-gnu@0.0.17':
+    resolution: {integrity: sha512-NYm9DrrBEjh4RqbIma/NiW92OHQL3BLcApwmi/+Mkr7aIKC2xin1xXbjb/UpdbEZTM/iyMfxBPlqNm65NSXEBQ==}
     cpu: [arm64]
     os: [linux]
 
-  '@oxc-angular/binding-linux-arm64-musl@0.0.15':
-    resolution: {integrity: sha512-u+R7jmVU35bLI+9o2oqC09zv3St2ZURk+b4RXzT2j9QLwy6LuGMLuKMOpB9oMVQpg5EdVxEG+8nyrv1QM9eOHA==}
+  '@oxc-angular/binding-linux-arm64-musl@0.0.17':
+    resolution: {integrity: sha512-HCETbptDOcZWxtUwTjpb1g7t3VTgUM8j+Ka6GFPS/RKXMe9V60RT+vK14ZzuJ0NWseEp6RDTCuTACuO82wCGFQ==}
     cpu: [arm64]
     os: [linux]
 
-  '@oxc-angular/binding-linux-x64-gnu@0.0.15':
-    resolution: {integrity: sha512-EjJJhM+Q4wv8uYNdIPwErRtDfI/PJ2F08Z7AHwFzrKIu6yuz6GsVvT7jgTydqkkysrRYH7iR4Pis+tuoWAEkGA==}
+  '@oxc-angular/binding-linux-x64-gnu@0.0.17':
+    resolution: {integrity: sha512-n2DcF1sxwlLlIsaDo0uRDKpZi1GCGrS+Rh44bf+uhuxmLLmi1wQWlkHrM0DhT0oAC3i2BSw1v+9PR69faxoPxA==}
     cpu: [x64]
     os: [linux]
 
-  '@oxc-angular/binding-linux-x64-musl@0.0.15':
-    resolution: {integrity: sha512-L9JcgC8m3WwA05nGppIrLUAAcedZ8Oy1EjSXTJREFGwAIWGEtQ1CFmPi8PIpvWmTLbagPp7waP3TGiQJWER6PQ==}
+  '@oxc-angular/binding-linux-x64-musl@0.0.17':
+    resolution: {integrity: sha512-Ii333XImt6wuH27Bic0Ve0DrqsosNm+j1pVRxe5YNDzOw/MNGGZzi8EReW5L90ySqz75Fy47eIWRvJwG201A5w==}
     cpu: [x64]
     os: [linux]
 
-  '@oxc-angular/binding-win32-arm64-msvc@0.0.15':
-    resolution: {integrity: sha512-QZ5GSMVeH+Ib58SHEqyTh0fJVWQG/C868gdHQ6M4qbUBzMpZZn3o6jrGOL1dmQRQlv+58jNkimk9OYOGC++2eQ==}
+  '@oxc-angular/binding-win32-arm64-msvc@0.0.17':
+    resolution: {integrity: sha512-WI3GDmA6Rsvka2b83BWUpD7rdxXC44KIQPjwAqpjq0Zg+aRrAF1FYMLB0Tyt6KAIdYppFuO95gByvzpR5sSauQ==}
     cpu: [arm64]
     os: [win32]
 
-  '@oxc-angular/binding-win32-x64-msvc@0.0.15':
-    resolution: {integrity: sha512-S+nFeI2Kv32oTrAq+xG4OegFvVQmWwGGklF8YxMaH0Ybk7F9//+lKR5ZzS5ltdP89MjBlNIa/hLUoL9Zu+bKsA==}
+  '@oxc-angular/binding-win32-x64-msvc@0.0.17':
+    resolution: {integrity: sha512-ti5ChvtYtN4CjSrDe//PMpDoNI6CYoRJ3dUfwKq5gcynf2rhSaptkiFj7mlYJK/gszBpgIoHrmmSay4h3Uu9Bg==}
     cpu: [x64]
     os: [win32]
 
-  '@oxc-angular/vite@0.0.15':
-    resolution: {integrity: sha512-y2lUT6kTJdyHh+ap3xkKIereHnBp87prGKPeczwte67y1AnZ5n6fcZmI/zJeUDyXHWtuf//HVYjhS70WbwZ0vg==}
+  '@oxc-angular/vite@0.0.17':
+    resolution: {integrity: sha512-D7c2LJ1URaZFrvn0aUluLgJ3aOh4w1KTimhjeZd7xlf1TT5Yoxzlw20zeSbIn7NhqZoXoX4BY3ijdrWbaimI+w==}
     peerDependencies:
       vite: '>=8.0.0-beta.10'
 
@@ -4484,43 +4484,43 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@oxc-angular/binding-darwin-arm64@0.0.15':
+  '@oxc-angular/binding-darwin-arm64@0.0.17':
     optional: true
 
-  '@oxc-angular/binding-darwin-x64@0.0.15':
+  '@oxc-angular/binding-darwin-x64@0.0.17':
     optional: true
 
-  '@oxc-angular/binding-linux-arm64-gnu@0.0.15':
+  '@oxc-angular/binding-linux-arm64-gnu@0.0.17':
     optional: true
 
-  '@oxc-angular/binding-linux-arm64-musl@0.0.15':
+  '@oxc-angular/binding-linux-arm64-musl@0.0.17':
     optional: true
 
-  '@oxc-angular/binding-linux-x64-gnu@0.0.15':
+  '@oxc-angular/binding-linux-x64-gnu@0.0.17':
     optional: true
 
-  '@oxc-angular/binding-linux-x64-musl@0.0.15':
+  '@oxc-angular/binding-linux-x64-musl@0.0.17':
     optional: true
 
-  '@oxc-angular/binding-win32-arm64-msvc@0.0.15':
+  '@oxc-angular/binding-win32-arm64-msvc@0.0.17':
     optional: true
 
-  '@oxc-angular/binding-win32-x64-msvc@0.0.15':
+  '@oxc-angular/binding-win32-x64-msvc@0.0.17':
     optional: true
 
-  '@oxc-angular/vite@0.0.15(vite@8.0.0-beta.18(@types/node@20.19.35)(esbuild@0.27.3)(jiti@2.6.1)(sass@1.97.3)(yaml@2.8.2))':
+  '@oxc-angular/vite@0.0.17(vite@8.0.0-beta.18(@types/node@20.19.35)(esbuild@0.27.3)(jiti@2.6.1)(sass@1.97.3)(yaml@2.8.2))':
     dependencies:
       obug: 2.1.1
       vite: 8.0.0-beta.18(@types/node@20.19.35)(esbuild@0.27.3)(jiti@2.6.1)(sass@1.97.3)(yaml@2.8.2)
     optionalDependencies:
-      '@oxc-angular/binding-darwin-arm64': 0.0.15
-      '@oxc-angular/binding-darwin-x64': 0.0.15
-      '@oxc-angular/binding-linux-arm64-gnu': 0.0.15
-      '@oxc-angular/binding-linux-arm64-musl': 0.0.15
-      '@oxc-angular/binding-linux-x64-gnu': 0.0.15
-      '@oxc-angular/binding-linux-x64-musl': 0.0.15
-      '@oxc-angular/binding-win32-arm64-msvc': 0.0.15
-      '@oxc-angular/binding-win32-x64-msvc': 0.0.15
+      '@oxc-angular/binding-darwin-arm64': 0.0.17
+      '@oxc-angular/binding-darwin-x64': 0.0.17
+      '@oxc-angular/binding-linux-arm64-gnu': 0.0.17
+      '@oxc-angular/binding-linux-arm64-musl': 0.0.17
+      '@oxc-angular/binding-linux-x64-gnu': 0.0.17
+      '@oxc-angular/binding-linux-x64-musl': 0.0.17
+      '@oxc-angular/binding-win32-arm64-msvc': 0.0.17
+      '@oxc-angular/binding-win32-x64-msvc': 0.0.17
 
   '@oxc-project/runtime@0.115.0': {}
 
