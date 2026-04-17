@@ -361,6 +361,15 @@ export function naxt(options?: NaxtOptions): Plugin[] {
       );
 
       return {
+        build: {
+          // Nitro's server environment can inherit top-level build input as a fallback.
+          // Keep it server-safe to avoid SSR builds defaulting to index.html.
+          rollupOptions: {
+            input: {
+              index: '#nitro-vite-setup',
+            },
+          },
+        },
         resolve: {
           alias: {
             '~': resolve(root, srcDir),
@@ -370,6 +379,13 @@ export function naxt(options?: NaxtOptions): Plugin[] {
           },
         },
         environments: {
+          client: {
+            build: {
+              rollupOptions: {
+                input: join(naxtDir, 'entry-client.ts'),
+              },
+            },
+          },
           ssr: {
             build: {
               rollupOptions: {
